@@ -1,0 +1,12 @@
+bot:
+  prefix: ["!"]
+  defaultLang: "en-US"
+  owners: ["349124522747887616"]
+  links:
+    discord: https://discord.gg/sample
+    invite: https://discord.com/oauth2/authorize?client_id={{client_id}}&scope=bot&permissions=8
+  tokens:
+    discord: "CLIENT TOKEN"
+  channels:
+    guilds: ""
+    errors: ""
