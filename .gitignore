@@ -1,3 +1,9 @@
+# omar stuff
+.env
+config.yml
+package-lock.json
+
+
 # Logs
 logs
 *.log
