@@ -19,7 +19,7 @@
   - [x] PostgreSQL `v12^`.
   - [x] Typescript `v4^`.
 
-## Installation
+### Installation
 
 *Clone this repository*  
 `git clone https://github.com/albatranomar/best-bot.git`
@@ -27,9 +27,9 @@
 *Install dependencies*  
 `npm install` && `npm install`
 
-## Configirations
+### Configirations
 
-*Fill [config.yml]() file with bot informaion (importants)*  
+*Fill [config.yml]() with bot informaion (importants)*  
 ```yml
 bot:
   prefix: ["!"]
@@ -45,12 +45,24 @@ bot:
     errors: "698204562246336657"
 ```
 
-*Fill [.env]() file with bot informaion (importants) for Database Managements by [Prisma](https://www.prisma.io/)*  
+*Fill [.env]() with bot informaion (importants) for Database Managements by [Prisma](https://www.prisma.io/)*  
 ```env
 DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public"
 ```
 
-## Setups
+### Setups
+  - In your PostgreSQL Database create tables by using [tables.schema.sql]()
+  - Then after createing tables:
+    - *Type in gitbash*: `npm run db:match`
+      - *Or use* `npx prisma introspect && npx prisma generate`
+  - Well done. lets go to run and start a bot.
+
+## Run & Start the bot.
+  - *To run test bot use:* `npm run test`
+  - *To run bot in development mode* `npm run start:dev`
+  - *To run bot in production mode using [Pm2](https://github.com/Unitech/pm2)* `npm run start:pro`
+  - *To restart bot using [Pm2](https://github.com/Unitech/pm2)* `npm run start:pro`
+
 
 ## Links
 
