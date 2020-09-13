@@ -1,5 +1,23 @@
 ## Features
 
+- [x] Languages system
+  - *Commands*
+    - `language`
+    - `language set en-US`
+    - `language delete`
+    - `language langs`
+- [x] Prefixes system
+  - *Commands*
+    - `prefix`
+    - `prefix add !`
+    - `prefix delete !`
+- [x] Completely modular commands, inhibitors, and listeners.
+  - Reading files recursively from directories.
+  - Adding, removing, and reloading modules.
+  - Creating your own handlers and module types.
+  - Prompting for input for arguments.
+  - [And More](https://github.com/discord-akairo/discord-akairo/blob/master/README.md#features)
+
 ### BestBot is using these below for DISCORD API Stuff:
   - [discord.js](https://github.com/discordjs/discord.js)
     - `npm install discord.js`
