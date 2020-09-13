@@ -61,7 +61,7 @@ DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public
   - *To run test bot use:* `npm run test`
   - *To run bot in development mode* `npm run start:dev`
   - *To run bot in production mode using [Pm2](https://github.com/Unitech/pm2)* `npm run start:pro`
-  - *To restart bot using [Pm2](https://github.com/Unitech/pm2)* `npm run start:pro`
+  - *To restart bot using [Pm2](https://github.com/Unitech/pm2)* `npm run restart`
 
 
 ## Links
