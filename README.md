@@ -29,7 +29,7 @@
 
 ### Configirations
 
-*Fill [config.yml]() with bot informaion (importants)*  
+*Fill [config.yml](https://github.com/albatranomar/best-bot/blob/master/config.yml.sample) with bot informaion (importants)*  
 ```yml
 bot:
   prefix: ["!"]
@@ -45,7 +45,7 @@ bot:
     errors: "698204562246336657"
 ```
 
-*Fill [.env]() with bot informaion (importants) for Database Managements by [Prisma](https://www.prisma.io/)*  
+*Fill [.env](https://github.com/albatranomar/best-bot/blob/master/prisma/.env.sample) with bot informaion (importants) for Database Managements by [Prisma](https://www.prisma.io/)*  
 ```env
 DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public"
 ```
