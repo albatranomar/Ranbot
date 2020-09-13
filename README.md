@@ -66,7 +66,7 @@ DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public
 
 ## Links
 
-- [Website](https://discord-akairo.github.io)
-- [Repository](https://github.com/discord-akairo/discord-akairo)  
-- [Changelog](https://github.com/discord-akairo/discord-akairo/releases)
-- [Discord](https://discord.gg/arTauDY)  
+- [Website](https://github.com/albatranomar/best-bot)
+- [Repository](https://github.com/albatranomar/best-bot)  
+- [Changelog](https://github.com/albatranomar/best-bot/releases)
+- [Discord](https://discord.gg/OMARTHEBEST)  
