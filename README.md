@@ -11,15 +11,23 @@
   - [Prisma](https://www.prisma.io/)
 
 
-## Installation and setups.
+## Requiremens, Installation, Configirations, and Setups.
 
-** Requires Node v12^, Discord.js v12^, PostgreSQL v12^ and Typescript v4^. **
+### Requiremens
+  [x] Requires Node `v12^`.
+  [x] Discord.js `v12^`.
+  [x] PostgreSQL `v12^`.
+  [x] Typescript `v4^`.
+
+## Installation
 
 *Clone this repository*  
 `git clone https://github.com/albatranomar/best-bot.git`
 
 *Install dependencies*  
 `npm install` && `npm install`
+
+## Configirations
 
 *Fill [config.yml]() file with bot informaion (importants)*  
 ```yml
@@ -41,6 +49,8 @@ bot:
 ```env
 DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public"
 ```
+
+## Setups
 
 ## Links
 
