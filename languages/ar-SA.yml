@@ -1,0 +1,132 @@
+commands:
+  info:
+    ping:
+      description:
+        content: "Displays the bot's latency"
+      response: "💓 **Shard Heartbeat**: **{{heartbeat}}ms**\n📡 **Discord Roundtrip**: **{{roundtrip}}ms**"
+    help:
+      description:
+        content: "Displays the command list and information on a selected command"
+        usage: "help <command>"
+        examples: ["help", "help play"]
+      embeds:
+        main:
+          footer: "© {{botname}} 2020"
+          author: "Available commands for {{member}}"
+        info:
+          fields:
+            main: "• Main Information"
+            other: "• Other Information"
+    stats:
+      description:
+        content: "Displays the bots information."
+      embed:
+        author: "Information | {{bot}}"
+        fields:
+          generalInfo:
+            name: "• General Info"
+            text: "**Servers**: {{guilds}}\n**Users**: {{users}}\n**Shards**: {{shards}}\n**Emojis**: {{emojis}}\n**Status**: {{botstatus}}\n**Game**: {{botgame}}"
+          advancedInfo:
+            name: "• Advanced Info"
+            text: "**OS**: {{os}}\n**CPU Usage**: {{cpuusage}}%\n**Memory Usage**: {{memusage}} MB/s\n**Node.js**: {{nodejs}}\n**NPM**: {{npm}}\n**Discord.js**: {{discordjs}}"
+    privacy:
+      description:
+        content: "Shows the bot's privacy policy"
+      response: "As of discords upcoiming terms, you must provide a privacy policy. This is BestBot's privacy policy:\n\n{{url}}"
+    speedtest:
+      description:
+        content: "Displays the speed of the VPS we are on."
+      response: ">>> ```md\n==[ Speed Test Results ]==\n\n- Download: {{download}}\n- Upload: {{upload}}```"
+  settings:
+    language:
+      description:
+        content: "Changes the language in the guild"
+        usage: "language <set|del, delete, rm, remove|current|languages, langs> {args}"
+        examples:
+          ["language set en-US", "language del", "language langs", "language"]
+      set:
+        prompts:
+          start: "Please provide a language"
+        error: "Invalid language, please run **{{prefix}}language langs** for the languages"
+        success: "Changed the language successfully to **{{language}}**"
+      del:
+        prompts:
+          confirm: "Are you sure you would like reset the language?\n\nType: {{words}} to confirm or deny the prompt."
+          cancelled: "Alright, cancelled the language deletion."
+        success: "Reset the language back to **en-US**"
+      current: "The current language is: **{{language}}**"
+      languages: "Here are the available languages:\n\n{{langs}}"
+    prefix:
+      description:
+        content: "Adds, or removes prefixes"
+        usage: "prefix <add|remove, rm, del, delete|current> {args}"
+        examples:
+          [
+            "prefix add ss!",
+            "prefix add `BestBot `",
+            "prefix remove ss!",
+            "prefix current",
+            "prefix",
+          ]
+      add:
+        prompts:
+          start: "What prefix would you like to add?"
+          retry: "This prefix is already a prefix, or it is above 12 characters, or below 1 character please try again."
+        success: "Added the prefix `{{prefix}}`"
+        error: "You are at the max prefix amount, please remove a few."
+      remove:
+        prompts:
+          start: "What prefix would you like to remove?"
+          retry: "That isn't even a prefix, please try again"
+          confirm: "Are you sure you'd like to remove this prefix?\n\nType: {{words}} to confirm or deny the prompt."
+          cancelled: "Alright, cancelled the prefix deletion"
+        success: "Removed the prefix `{{prefix}}`"
+      current: "Here are the current guild prefixes:\n\n{{prefixes}}"
+    djrole:
+      description:
+        content: "Configures the DJ role"
+        usage: "djrole <set|del, delete, remove, rm|current> {args}"
+        examples:
+          ["djrole set @DJ", "djrole delete", "djrole current", "djrole"]
+      set:
+        prompts:
+          start: "What would you like the DJ role to be?"
+          retry: "Invalid role, please try again"
+        error: "{{role}} is already the DJ role.."
+        success: "Set the DJ role to {{role}}"
+      del:
+        prompts:
+          confirm: "Are you sure you want to reset the DJ role?\n\nType: {{words}} to confirm or deny the prompt."
+          cancelled: "Alright, cancelled the deletion of the DJ role"
+        success: "Reset the DJ role back to nothing successfully."
+      current: "The current DJ role is {{role}}"
+bot:
+  prompts:
+    start: "**{{prompt}}**\n\nYou can type `cancel` to cancel."
+    cancel: "You have cancelled the command."
+    ended: "The retry threshold has been exceeded, I will be cancelling now."
+    timeout: "Timeout time has been exceeded, cancelled the command for you."
+    confirmWords: ["yes", "no"]
+  queue:
+    stuck: "Un oh, something went wrong... Give me a moment please."
+    nowplaying: "{{author}}\n\n[{{title}}]({{uri}})"
+    error: "That wasn't expected! Please report it to our [report centere]({{invite}})\n```js\n{{error}}```"
+    finished:
+      alone: "You left me in a voice channel alone, so I will be leaving it now."
+      empty: "The queue has emptied out, so I will be leaving now."
+      disconnected: "I have now disconnected my player, goodbye!"
+  events:
+    handler:
+      cooldown: "Please wait **{{time}}** until using that command again."
+    permissions:
+      bot: "Oops, I am missing the permission{{s}}: {{permissions}}"
+      user: "Oops, you are missing the permission{{s}}: {{permissions}}"
+      owner: "This command is flagged as owner only."
+      guild: "This command can only be run in a server. Please find a server with me in it, and then run this command."
+      error: "Sorry about that, I got an error! Please report it to the [support centere]({{discord}})\n```js\n{{error}}```"
+      dj: "This command is only allowed for DJs to use."
+    client:
+      guild:
+        create: "We have joined **{{name}}**!\n\nWe are now in **{{amt}}** guilds."
+        delete: "We have left **{{name}}**.\n\nWe are now in **{{amt}}** guilds."
+  otherwise: "Invalid usage! Please run: **{{prefix}}help {{cmd}}** for the valid usage."
