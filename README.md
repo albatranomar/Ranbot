@@ -1,18 +1,21 @@
 ## Table of contents
-- [Requiremens](#requiremens)
-- [Installation](#installation)
-- [Configirations](#configirations)
-- [Setups](#setups)
+- [Steps to get ready](#steps-to-get-ready)
+  - [Requiremens](#requiremens)
+  - [Installation](#installation)
+  - [Configirations](#configirations)
+  - [Setups](#setups)
 - [Start the bot](#start-the-bot)
 - [Features](#features)
+  - [Features Info](#features-info)
+  - [Features Content](#features-content)
 - [Links](#links)
 
+# Steps to get ready
 ## Requiremens
 - [x] Requires Node `v12^`.
 - [x] Discord.js `v12^`.
 - [x] PostgreSQL `v12^`.
 - [x] Typescript `v4^`.
-
 ## Installation
 
 _Clone this repository_  
@@ -20,7 +23,6 @@ _Clone this repository_
 
 _Install dependencies_  
 `npm install` && `npm install`
-
 ## Configirations
 
 _Fill [config.yml](https://github.com/albatranomar/best-bot/blob/master/config.yml.sample) with bot informaion (importants)_
@@ -45,7 +47,6 @@ _Fill [.env](https://github.com/albatranomar/best-bot/blob/master/prisma/.env.sa
 ```env
 DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public"
 ```
-
 ## Setups
 
 - In your PostgreSQL Database create tables by using [tables.schema.sql]()
@@ -54,15 +55,25 @@ DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public
     - _Or use_ `npx prisma introspect && npx prisma generate`
 - Well done. lets go to run and start a bot.
 
-## Start the bot.
-
+# Start the bot.
 - _To run test bot use:_ `npm run test`
 - _To run bot in development mode_ `npm run start:dev`
 - _To run bot in production mode using [Pm2](https://github.com/Unitech/pm2)_ `npm run start:pro`
 - _To restart bot using [Pm2](https://github.com/Unitech/pm2)_ `npm run restart`
 
-## Features
+# Features
+## Features Info
+### DISCORD API Stuff:
+- [discord.js](https://github.com/discordjs/discord.js)
+  - `npm install discord.js`
+- [discord-akairo](https://github.com/discord-akairo/discord-akairo)
+  - `npm install discord-akairo`
 
+### Database Managements.
+- [PostgreSQL](https://www.postgresql.org/)
+- [Prisma](https://www.prisma.io/)
+
+## Features Content
 - [x] Languages system
   - _Commands_
     - `language`
@@ -75,20 +86,18 @@ DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public
     - `prefix add !`
     - `prefix delete !`
 - [x] Features Supported by [discord-akairo](https://github.com/discord-akairo/discord-akairo).
-  - #### Completely modular commands, inhibitors, and listeners.
+  - ### Completely modular commands, inhibitors, and listeners.
     - Reading files recursively from directories.
     - Adding, removing, and reloading modules.
     - Creating your own handlers and module types.
-
-  - #### Flexible command handling and creation.
+  - ### Flexible command handling and creation.
     - Command aliases.
     - Command throttling and cooldowns.
     - Client and user permission checks.
     - Running commands on edits and editing previous responses.
     - Multiple prefixes and mention prefixes.
     - Regular expression and conditional triggers.
-
-  - #### Complex and highly customizable arguments.
+  - ### Complex and highly customizable arguments.
     - Support for quoted arguments.
     - Arguments based on previous arguments.
     - Several ways to match arguments, such as flag arguments.
@@ -101,31 +110,17 @@ DATABASE_URL="postgres://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public
       - Customizable prompts with embeds, files, etc.
       - Easily include dynamic data such as the incorrect input.
       - Infinite argument prompting.
-
-  - #### Blocking and monitoring messages with inhibitors.
+  - ### Blocking and monitoring messages with inhibitors.
     - Run at various stages of command handling.
       - On all messages.
       - On messages that are from valid users.
       - On messages before commands.
-
-  - #### Helpful events and modular listeners.
+  - ### Helpful events and modular listeners.
     - Events for handlers, such as loading modules.
     - Events for various stages of command handling.
     - Reloadable listeners to easily separate your event handling.
 
-### BestBot is using these below for DISCORD API Stuff:
-
-- [discord.js](https://github.com/discordjs/discord.js)
-  - `npm install discord.js`
-- [discord-akairo](https://github.com/discord-akairo/discord-akairo)
-  - `npm install discord-akairo`
-
-### And using these below for Database Managements.
-
-- [PostgreSQL](https://www.postgresql.org/)
-- [Prisma](https://www.prisma.io/)
-
-## Links
+# Links
 
 - [Website](https://github.com/albatranomar/best-bot)
 - [Repository](https://github.com/albatranomar/best-bot)
