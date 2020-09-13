@@ -8,6 +8,10 @@
 - [Links](#links)
 
 ## Requiremens
+- [x] Requires Node `v12^`.
+- [x] Discord.js `v12^`.
+- [x] PostgreSQL `v12^`.
+- [x] Typescript `v4^`.
 
 ## Installation
 
