@@ -2,6 +2,10 @@ import { Guild, Collection, User } from "discord.js";
 import { EventEmitter } from "events";
 import { User as dbUser, UserLevel, Guild as dbGuild, GuildMember, GuildAliases } from "@prisma/client";
 import dotprop from "dot-prop";
+import { gunzipSync } from "zlib";
+import { printStack } from "@prisma/client/runtime";
+import Logger from "@ayanaware/logger";
+import { read } from "fs";
 
 interface defaultUsersCollectionSchema extends dbUser {
   level: UserLevel
@@ -40,8 +44,60 @@ const defaultUserLevel = {
 };
 
 export class Database extends EventEmitter {
+  public logger: Logger = Logger.get(Database);
   public guilds = new Collection<string, defaultGuildsCollectionSchema>();
   public users = new Collection<string, defaultUsersCollectionSchema>();
+
+  public get userManagement() {
+    let {
+      createUser,
+      updateUser,
+      deleteUser
+    } = this;
+    return {
+      createUser,
+      updateUser,
+      deleteUser
+    }
+  }
+  public get guildManagement() {
+    let {
+      createGuild,
+      updateGuild,
+      deleteGuild
+    } = this;
+    return {
+      createGuild,
+      updateGuild,
+      deleteGuild
+    }
+  }
+  public get guildMemberManagement() {
+    let {
+      createGuildMember,
+      updateGuildMember,
+      deleteGuildMember
+    } = this;
+    return {
+      createGuildMember,
+      updateGuildMember,
+      deleteGuildMember
+    }
+  }
+  public get guildAliasesManagement() {
+    let {
+      createGuildAlias,
+      deleteGuildAlias,
+      deleteAllCommandAliases,
+      deleteAllGuildAliases
+    } = this;
+    return {
+      createGuildAlias,
+      deleteGuildAlias,
+      deleteAllCommandAliases,
+      deleteAllGuildAliases
+    }
+  }
 
   public async init(): Promise<void> {
     this.emit("initialized");
@@ -56,58 +112,16 @@ export class Database extends EventEmitter {
     }
   }
 
-  public async setUsers(user: string | User, path: string, value: any) {
-    let userID = Database.userIDResolver(user);
-    let item = this.users.get(userID) ?? (await this.newUser(userID));
-    dotprop.set(item, path, value);
-    this.users.set(userID, item);
-    this.emit("setUsers", user, path, value);
-    return await prisma.user.update({
-      where: { id: userID }, data: {
-        totalxp: item.totalxp,
-        likes: item.likes,
-        coins: item.coins,
-        bio: item.bio,
-        UserLevel: {
-          update: [{
-            where: { userID },
-            data: { ...item.level }
-          }]
-        }
-      }
-    })
-  }
-  public async setGuilds(guild: string | Guild, path: string, value: any) {
-    let guildID = Database.guildIDResolver(guild);
-    let item = this.guilds.get(guildID) ?? (await this.newGuild(guildID));
-    dotprop.set(item, path, value);
-    this.guilds.set(guildID, item);
-    this.emit("setGuilds", guild, path, value);
-    return await prisma.guild.update({
-      where: { id: guildID }, data: {
-        lang: item.lang,
-        prefix: item.prefix,
-        GuildMember: {
-          update: item.members.map((gm) => {
-            return {
-              where: {
-                id: gm.id
-              },
-              data: {
-                totalxp: gm.totalxp
-              }
-            }
-          })
-        }
-      }
-    })
+  public async reCache(): Promise<void> {
+    await this.init();
   }
 
-  public async newUser(user: string | User): Promise<defaultUsersCollectionSchema> {
+  private async createUser(user: string | User) {
     let userID = Database.userIDResolver(user);
-    let item = this.users.get(userID);
-    if (!item) {
-      let theNewUser = await prisma.user.create({
+    if (this.users.has(userID)) {
+      return this.users.get(userID);
+    } else {
+      let newUser = await prisma.user.create({
         data: {
           id: userID,
           ...defaultUserSettings,
@@ -118,25 +132,263 @@ export class Database extends EventEmitter {
           }
         }
       });
-      theNewUser["level"] = await prisma.userLevel.findOne({ where: { userID } });
-      item = theNewUser as defaultUsersCollectionSchema;
+      let newUserLevel = await prisma.userLevel.findOne({ where: { userID } });
+      this.users.set(userID, {
+        ...newUser,
+        level: newUserLevel
+      });
+      return this.users.get(userID);
     }
-    return item;
   }
-  public async newGuild(guild: string | Guild): Promise<defaultGuildsCollectionSchema> {
+  private async updateUser(user: string | User, key: string, value: any) {
+    let userID = Database.userIDResolver(user);
+    if (this.users.has(userID)) {
+      this.users.get(userID)[key] = value;
+      let data = {};
+      data[key] = value;
+      return await prisma.user.update({
+        where: {
+          id: userID
+        },
+        data
+      });
+    } else {
+      this.logger.warn(`Can't update User(${userID}) cuz can't find ('userID' = '${userID}') in the database`);
+      return false;
+    }
+  }
+  private async deleteUser(user: string | User) {
+    let userID = Database.userIDResolver(user);
+    if (this.users.has(userID)) {
+      this.users.delete(userID);
+      return await prisma.user.delete({
+        where: {
+          id: userID
+        }
+      })
+    } else {
+      this.logger.warn(`Can't delete User(${userID}) cuz can't find ('userID' = '${userID}') in the database`);
+      return false;
+    }
+  }
+  private async createGuild(guild: string | Guild) {
     let guildID = Database.guildIDResolver(guild);
-    let item = this.guilds.get(guildID);
-    if (!item) {
-      let theNewGuild = await prisma.guild.create({
+    if (this.guilds.has(guildID)) {
+      return this.guilds.get(guildID);
+    } else {
+      let newGuild = await prisma.guild.create({
         data: {
           id: guildID,
           ...defaultGuildSettings
         }
       });
-      theNewGuild["members"] = await prisma.guildMember.findMany({ where: { guildID } });
-      item = theNewGuild as defaultGuildsCollectionSchema;
+      this.guilds.set(guildID, {
+        ...newGuild,
+        members: [],
+        aliases: []
+      });
+      return this.guilds.get(guildID);
     }
-    return item;
+  }
+  private async updateGuild(guild: string | Guild, key: string, value: any) {
+    let guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID)) {
+      this.guilds.get(guildID)[key] = value;
+      let data = {};
+      data[key] = value;
+      return await prisma.guild.update({
+        where: {
+          id: guildID
+        },
+        data
+      });
+    } else {
+      this.logger.warn(`Can't update Guild(${guildID}) cuz can't find ('guildID' = '${guildID}') in the database`);
+      return false;
+    }
+  }
+  private async deleteGuild(guild: string | Guild) {
+    let guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID)) {
+      this.guilds.delete(guildID);
+      return await prisma.guild.delete({
+        where: {
+          id: guildID
+        }
+      })
+    } else {
+      this.logger.warn(`Can't delete Guild(${guildID}) cuz can't find ('guildID' = '${guildID}') in the database`);
+      return false;
+    }
+  }
+  private async createGuildMember(guild: string | Guild, user: string | User) {
+    let userID = Database.userIDResolver(user),
+      guildID = Database.guildIDResolver(guild);
+    if (this.guilds.find(g => g.id == guildID && g.members.find(m => m.userID == userID) as unknown as boolean)) {
+      return this.guilds.find(g => g.id == guildID && g.members.find(m => m.userID == userID) as unknown as boolean);
+    } else {
+      let newGuildMember = await prisma.guildMember.create({
+        data: {
+          Guild: {
+            connect: {
+              id: guildID
+            }
+          },
+          User: {
+            connect: {
+              id: userID
+            }
+          },
+          totalxp: 1
+        }
+      });
+      this.guilds.get(guildID).members.push(newGuildMember);
+      return this.guilds.get(guildID);
+    }
+  }
+  private async updateGuildMember(guild: string | Guild, user: string | User, key: string, value: any) {
+    let userID = Database.userIDResolver(user),
+      guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID) && this.guilds.get(guildID).members.find(m => m.userID == userID)) {
+      let gm = this.guilds.get(guildID).members.find(m => m.userID == userID);
+      gm[key] = value;
+      let data = {};
+      data[key] = value;
+      return await prisma.guildMember.update({
+        where: {
+          id: gm.id
+        },
+        data
+      })
+    } else {
+      this.logger.warn(`Can't update GuildMember(${guildID},${userID}) cuz can't find ('guildID' = '${guildID}' OR 'userID' = '${userID}') in the database`);
+      return false;
+    }
+  }
+  private async deleteGuildMember(guild: string | Guild, user: string | User) {
+    let userID = Database.userIDResolver(user),
+      guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID) && this.guilds.get(guildID).members.find(m => m.userID == userID)) {
+      let id = parseInt(`${this.guilds.get(guildID).members.find(m => m.userID == userID).id}`);
+      this.guilds.get(guildID).members = this.guilds.get(guildID).members.filter(gm => gm.userID != userID);
+      return await prisma.guildMember.delete({
+        where: {
+          id
+        }
+      })
+    } else {
+      this.logger.warn(`Can't delete GuildMember(${guildID},${userID}) cuz can't find ('guildID' = '${guildID}' OR 'userID' = '${userID}') in the database`);
+      return false;
+    }
+  }
+
+  private async createGuildAlias(guild: string | Guild, commandID: string, alias: string) {
+    let guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID)) {
+      let currentCommandAliases = this.guilds.get(guildID).aliases.find(a => a.commandID == commandID);
+      if (currentCommandAliases) {
+        currentCommandAliases.aliases.push(alias);
+        return await prisma.guildAliases.update({
+          where: {
+            id: currentCommandAliases.id
+          },
+          data: {
+            Guild: {
+              connect: {
+                id: guildID
+              }
+            },
+            aliases: {
+              set: currentCommandAliases.aliases
+            }
+          }
+        });
+      } else {
+        let newGuildALias = await prisma.guildAliases.create({
+          data: {
+            Guild: {
+              connect: {
+                id: guildID
+              }
+            },
+            commandID,
+            aliases: {
+              set: [alias]
+            }
+          }
+        });
+        this.guilds.get(guildID).aliases.push(newGuildALias);
+        return newGuildALias;
+      }
+    } else {
+      this.logger.warn(`Can't create GuildAlias(${commandID}=>${alias}) cuz can't find ('guildID' = '${guildID}') in the database`);
+      return false;
+    }
+  }
+  private async deleteGuildAlias(guild: string | Guild, commandID: string, alias: string) {
+    let guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID)) {
+      let currentCommandAliases = this.guilds.get(guildID).aliases.find(a => a.commandID == commandID);
+      if (currentCommandAliases) {
+        currentCommandAliases.aliases = currentCommandAliases.aliases.filter(a => a != alias);
+        return await prisma.guildAliases.update({
+          where: {
+            id: currentCommandAliases.id
+          },
+          data: {
+            Guild: {
+              connect: {
+                id: guildID
+              }
+            },
+            aliases: {
+              set: currentCommandAliases.aliases
+            }
+          }
+        });
+      } else {
+        this.logger.warn(`Can't delete GuildAlias(${commandID}=>${alias}) cuz can't find ('commandID' = '${commandID}') in the database`);
+        return false;
+      }
+    } else {
+      this.logger.warn(`Can't delete GuildAlias(${commandID}=>${alias}) cuz can't find ('guildID' = '${guildID}') in the database`);
+      return false;
+    }
+  }
+  private async deleteAllCommandAliases(guild: string | Guild, commandID: string) {
+    let guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID)) {
+      let currentCommandAliases = this.guilds.get(guildID).aliases.find(a => a.commandID == commandID);
+      let id = parseInt(`${currentCommandAliases.id}`);
+      if (currentCommandAliases) {
+        this.guilds.get(guildID).aliases = this.guilds.get(guildID).aliases.filter(a => a.id != currentCommandAliases.id);
+        return await prisma.guildAliases.delete({
+          where: {
+            id
+          }
+        });
+      } else {
+        this.logger.warn(`Can't delete GuildAliases(${commandID}) cuz can't find ('commandID' = '${commandID}') in the database`);
+        return false;
+      }
+    } else {
+      this.logger.warn(`Can't create GuildAliases(${commandID}) cuz can't find ('guildID' = '${guildID}') in the database`);
+      return false;
+    }
+  }
+  private async deleteAllGuildAliases(guild: string | Guild) {
+    let guildID = Database.guildIDResolver(guild);
+    if (this.guilds.has(guildID)) {
+      this.guilds.get(guildID).aliases = [];
+      return await prisma.guildAliases.deleteMany({
+        where: {
+          guildID
+        }
+      });
+    } else {
+      this.logger.warn(`Can't create AllGuildAliases(${guildID}) cuz can't find ('guildID' = '${guildID}') in the database`);
+      return false;
+    }
   }
 
   public static guildIDResolver(guild: string | Guild): string {
