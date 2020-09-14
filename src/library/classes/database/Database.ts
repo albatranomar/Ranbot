@@ -16,9 +16,6 @@ interface defaultGuildsCollectionSchema extends dbGuild {
   aliases: GuildAliases[]
 };
 
-/**
- * @type {dbUser}
- */
 const defaultUserSettings = {
   totalxp: 1,
   likes: 0,
@@ -26,21 +23,17 @@ const defaultUserSettings = {
   bio: 'come back later(OMAR)',
 };
 
-/**
- * @type {dbGuild}
- */
-const defaultGuildSettings = {
-  prefix: '-',
-  lang: "en-US"
-};
-
-/**
- * @type {UserLevel}
- */
 const defaultUserLevel = {
   current: 1,
   xp: 1,
   levelup: 500,
+};
+
+const defaultGuildSettings = {
+  prefix: {
+    set: ['-']
+  },
+  lang: "en-US"
 };
 
 export class Database extends EventEmitter {

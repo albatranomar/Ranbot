@@ -13,7 +13,7 @@ export default Structures.extend(
       public get prefix(): string[] {
         let prefixes = [...config.get("bot.prefix") as string[]];
         if (!this.guild) return prefixes;
-        let dbGuildPrefixes = (this.client as AkairoClient).database.guilds.get(this.guild.id)?.prefix.split(',');
+        let dbGuildPrefixes = (this.client as AkairoClient).database.guilds.get(this.guild.id)?.prefix;
         if (dbGuildPrefixes.includes('-')) {
           prefixes = dbGuildPrefixes;
         } else {

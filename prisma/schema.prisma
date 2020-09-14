@@ -9,8 +9,8 @@ datasource db {
 
 model Guild {
   id           String         @id
-  prefix       String
   lang         String
+  prefix       String[]
   GuildAliases GuildAliases[]
   GuildMember  GuildMember[]
 }
