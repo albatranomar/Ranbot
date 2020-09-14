@@ -1,6 +1,6 @@
 import { Guild, Collection, User } from "discord.js";
 import { EventEmitter } from "events";
-import { User as dbUser, UserLevel, Guild as dbGuild, GuildMember } from "@prisma/client";
+import { User as dbUser, UserLevel, Guild as dbGuild, GuildMember, GuildAliases } from "@prisma/client";
 import dotprop from "dot-prop";
 
 interface defaultUsersCollectionSchema extends dbUser {
@@ -8,7 +8,8 @@ interface defaultUsersCollectionSchema extends dbUser {
 };
 
 interface defaultGuildsCollectionSchema extends dbGuild {
-  members: GuildMember[]
+  members: GuildMember[],
+  aliases: GuildAliases[]
 };
 
 /**
@@ -46,6 +47,7 @@ export class Database extends EventEmitter {
     this.emit("initialized");
     for (const guild of await prisma.guild.findMany()) {
       guild["members"] = await (await prisma.guildMember.findMany({ where: { guildID: guild.id } }));
+      guild["aliases"] = await (await prisma.guildAliases.findMany({ where: { guildID: guild.id } }));
       this.guilds.set(guild.id, guild as defaultGuildsCollectionSchema);
     }
     for (const user of await prisma.user.findMany()) {
