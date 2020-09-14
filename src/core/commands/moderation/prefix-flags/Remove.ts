@@ -56,9 +56,7 @@ export default class PrefixCommand extends Command {
       );
 
     message.prefix.splice(message.prefix.indexOf(prefix), 1);
-    let guildSettings = this.client.database.guilds.get(message.guild.id);
-    guildSettings.prefix = guildSettings.prefix.replace(prefix, '').split(',').filter(x => x.length >= 1).join(',');
-    await this.client.database.setGuilds(message.guild, 'prefix', guildSettings.prefix);
+    await this.client.database.guildManagement.updateGuild(message.guild, 'prefix', message.prefix, true);
 
     return message.util.send(
       new MessageEmbed().setColor("#7289DA").setDescription(

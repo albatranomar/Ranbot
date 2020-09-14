@@ -42,9 +42,7 @@ export default class PrefixCommand extends Command {
     prefix.replace(/`/g, "");
 
     message.prefix.push(prefix);
-    let guildSettings = this.client.database.guilds.get(message.guild.id);
-    guildSettings.prefix += `,${prefix}`;
-    await this.client.database.setGuilds(message.guild, 'prefix', guildSettings.prefix);
+    await this.client.database.guildManagement.updateGuild(message.guild, 'prefix', message.prefix, true);
 
     return message.util.send(
       new MessageEmbed()

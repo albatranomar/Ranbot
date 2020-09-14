@@ -19,7 +19,6 @@ export default class LanguageCommand extends Command {
 
   async exec(message: Message, { language }: { language: string }) {
     const langs = [...this.client.languages.languages.keys()];
-
     if (!langs.includes(language))
       return message.util.send(
         new MessageEmbed()
@@ -29,7 +28,7 @@ export default class LanguageCommand extends Command {
           )
       );
 
-    await this.client.database.setGuilds(message.guild, 'lang', language);
+    await this.client.database.guildManagement.updateGuild(message.guild, 'lang', language);
 
     return message.util.send(
       new MessageEmbed()
