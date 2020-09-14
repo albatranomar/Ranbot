@@ -183,10 +183,15 @@ export class Database extends EventEmitter {
       return this.guilds.get(guildID);
     }
   }
-  private async updateGuild(guild: string | Guild, key: string, value: any) {
+  private async updateGuild(guild: string | Guild, key: string, value: any, isItAnArray: boolean = false) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       this.guilds.get(guildID)[key] = value;
+      if (isItAnArray) {
+        value = {
+          set: value
+        }
+      }
       let data = {};
       data[key] = value;
       return await prisma.guild.update({
