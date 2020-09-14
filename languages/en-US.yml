@@ -82,24 +82,32 @@ commands:
           cancelled: "Alright, cancelled the prefix deletion"
         success: "Removed the prefix `{{prefix}}`"
       current: "Here are the current guild prefixes:\n\n{{prefixes}}"
-    djrole:
+    aliases:
       description:
-        content: "Configures the DJ role"
-        usage: "djrole <set|del, delete, remove, rm|current> {args}"
+        content: "Adds, or removes aliases"
+        usage: "aliases <add|remove, rm, del, delete|reset|current> {args}"
         examples:
-          ["djrole set @DJ", "djrole delete", "djrole current", "djrole"]
-      set:
+          [
+            "aliases add help needhelp",
+            "aliases reset",
+            "aliases remove help needhelp",
+            "aliases current",
+            "aliases",
+          ]
+      add:
         prompts:
-          start: "What would you like the DJ role to be?"
-          retry: "Invalid role, please try again"
-        error: "{{role}} is already the DJ role.."
-        success: "Set the DJ role to {{role}}"
-      del:
+          start: "What prefix would you like to add?"
+          retry: "This prefix is already a prefix, or it is above 12 characters, or it is have `,` in characters, or below 1 character please try again."
+        success: "Added the prefix `{{prefix}}`"
+        error: "You are at the max prefix amount, please remove a few."
+      remove:
         prompts:
-          confirm: "Are you sure you want to reset the DJ role?\n\nType: {{words}} to confirm or deny the prompt."
-          cancelled: "Alright, cancelled the deletion of the DJ role"
-        success: "Reset the DJ role back to nothing successfully."
-      current: "The current DJ role is {{role}}"
+          start: "What prefix would you like to remove?"
+          retry: "That isn't even a prefix, please try again"
+          confirm: "Are you sure you'd like to remove this prefix?\n\nType: {{words}} to confirm or deny the prompt."
+          cancelled: "Alright, cancelled the prefix deletion"
+        success: "Removed the prefix `{{prefix}}`"
+      current: "Here are the current guild prefixes:\n\n{{prefixes}}"
 bot:
   prompts:
     start: "**{{prompt}}**\n\nYou can type `cancel` to cancel."
