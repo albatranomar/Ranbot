@@ -4,7 +4,7 @@
   "description": "A Discord Bot.🖤",
   "main": "./dist/BestBot.js",
   "scripts": {
-    "build": "tsc && \"the project built in \"dist/\" folder\" && exit 1",
+    "build": "tsc",
     "start": "node .",
     "test": "npm run start:dev",
     "start:dev": "npm run build && clear && node .",
