@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 (global as any).prisma = new PrismaClient();
 (global as any).config = Configuration.getInstance();
 
+import "./library/extensions/Guild";
 import "./library/extensions/Message";
 import "./library/extensions/Member";
 import "./library/classes/general/Formatter";
