@@ -8,10 +8,11 @@ datasource db {
 }
 
 model Guild {
-  id          String        @id
-  prefix      String
-  lang        String
-  GuildMember GuildMember[]
+  id           String         @id
+  prefix       String
+  lang         String
+  GuildAliases GuildAliases[]
+  GuildMember  GuildMember[]
 }
 
 model GuildMember {
@@ -39,4 +40,12 @@ model UserLevel {
   xp      Int
   levelup Int
   User    User   @relation(fields: [userID], references: [id])
+}
+
+model GuildAliases {
+  id        Int      @default(autoincrement()) @id
+  guildID   String
+  commandID String
+  aliases   String[]
+  Guild     Guild    @relation(fields: [guildID], references: [id])
 }
