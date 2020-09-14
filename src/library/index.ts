@@ -3,7 +3,7 @@ export * from "./classes";
 export * from "./bestbotClient";
 
 import { PermissionString } from "discord.js";
-import { PrismaClient } from "@prisma/client";
+import { GuildAliases, PrismaClient, GuildMember as databaseGuildMember } from "@prisma/client";
 import { Configuration } from ".";
 import { LanguageProvider } from ".";
 import { Database } from "./classes";
@@ -35,6 +35,12 @@ declare module "discord.js" {
     translate<T extends any>(path: string, variables?: Record<string, any>): T;
     language: string;
     prefix: string[];
+  }
+
+  interface Guild {
+    language: string;
+    databaseMembers: databaseGuildMember[];
+    databaseAliases: GuildAliases[]
   }
 
   interface GuildMember {
