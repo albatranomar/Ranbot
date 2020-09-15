@@ -1,7 +1,7 @@
 {
   "name": "bestbot",
   "version": "1.0.0",
-  "description": "A Discord Bot.🖤",
+  "description": "A Discord Bot.🖤 by Omar",
   "main": "./dist/BestBot.js",
   "scripts": {
     "build": "tsc",
