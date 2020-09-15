@@ -16,9 +16,6 @@ export default class ReadyEvent extends Listener {
     this.client.commandHandler.categories.filter(c => c.id != "flag").map((cat) => {
       this.client.logger.info(`Categories[${cat.id}]: ${this.client.commandHandler.modules.filter((com) => com.categoryID == cat.id).map((com) => com.id).join(',')}.`);
     });
-    // this.client.user.setActivity(
-    //   `${config.get("bot.prefix")[0]}help | giving people music to listen to`,
-    //   { type: "WATCHING" }
-    // );
+    this.client.commandHandler.modules.forEach((c) => c.channel = 'guild');
   }
 }
