@@ -17,7 +17,7 @@ export default class AliasesCommand extends Command {
       type: [
         ["aliases-add", "add"],
         ["aliases-del", "del", "delete", "rm", "remove"],
-        ["aliases-rest", "rest", "del-all", "delete-all", "rm-all", "remove-all"],
+        ["aliases-reset", "reset", "del-all", "delete-all", "rm-all", "remove-all"],
         ["aliases-current", "current"],
       ],
       default: "aliases-current",
