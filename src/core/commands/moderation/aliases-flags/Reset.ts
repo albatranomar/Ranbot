@@ -17,7 +17,7 @@ export default class PrefixCommand extends Command {
             message.translate("commands.settings.aliases.rest.error")
           )
       );
-    await this.client.database.guildAliasesManagement.deleteAllGuildAliases(message.guild);
+    await this.client.database.deleteAllGuildAliases(message.guild);
 
     return message.util.send(
       new MessageEmbed()

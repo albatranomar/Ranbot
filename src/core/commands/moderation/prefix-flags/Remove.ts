@@ -56,7 +56,7 @@ export default class PrefixCommand extends Command {
       );
 
     message.prefix.splice(message.prefix.indexOf(prefix), 1);
-    await this.client.database.guildManagement.updateGuild(message.guild, 'prefix', message.prefix, true);
+    await this.client.database.updateGuild(message.guild, 'prefix', message.prefix, true);
 
     return message.util.send(
       new MessageEmbed().setColor("#7289DA").setDescription(

@@ -47,7 +47,7 @@ export default class PrefixCommand extends Command {
       );
 
     alias.replace(/`/g, "");
-    await this.client.database.guildAliasesManagement.createGuildAlias(message.guild, forcommand.id, alias);
+    await this.client.database.createGuildAlias(message.guild, forcommand.id, alias);
 
     return message.util.send(
       new MessageEmbed()

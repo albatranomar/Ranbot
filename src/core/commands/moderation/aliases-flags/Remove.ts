@@ -62,7 +62,7 @@ export default class PrefixCommand extends Command {
           )
       );
 
-    await this.client.database.guildAliasesManagement.deleteGuildAlias(message.guild, forcommand.id, alias);
+    await this.client.database.deleteGuildAlias(message.guild, forcommand.id, alias);
 
     return message.util.send(
       new MessageEmbed().setColor("#7289DA").setDescription(

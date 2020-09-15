@@ -34,7 +34,7 @@ export default class LanguageCommand extends Command {
           )
       );
 
-    await this.client.database.guildManagement.updateGuild(message.guild, 'lang', config.get('bot.defaultLang'));
+    await this.client.database.updateGuild(message.guild, 'lang', config.get('bot.defaultLang'));
 
     return message.util.send(
       new MessageEmbed()
