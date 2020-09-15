@@ -111,7 +111,7 @@ commands:
   general:
     roll:
       description:
-        content: "Displays the bot's latency"
+        content: "rolling dice."
       showRollMessage: "{{random}}"
 bot:
   prompts:
