@@ -40,7 +40,7 @@ export class BestBotClient extends AkairoClient {
       if (message.guild) {
         return message.prefix
       }
-      return [config.get("bot.prefix") as string];
+      return [...config.get("bot.prefix") as string[]];
     },
     blockBots: true,
     blockClient: true,
