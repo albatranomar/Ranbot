@@ -108,6 +108,11 @@ commands:
           cancelled: "Alright, cancelled the prefix deletion"
         success: "Removed the prefix `{{prefix}}`"
       current: "Here are the current guild prefixes:\n\n{{prefixes}}"
+  general:
+    roll:
+      description:
+        content: "rolling dice."
+      showRollMessage: "{{random}}"
 bot:
   prompts:
     start: "**{{prompt}}**\n\nYou can type `cancel` to cancel."
