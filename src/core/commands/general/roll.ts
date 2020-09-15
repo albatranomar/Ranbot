@@ -20,6 +20,6 @@ export default class RollCommand extends Command {
   async exec(message: Message, { limit }: { limit: number }) {
     let random = Math.random() * limit + 1;
 
-    message.util.send(message.translate("commands.general.roll.showRollMessage", { random }));
+    message.util.send(new MessageEmbed().setColor("random").setDescription(message.translate("commands.general.roll.showRollMessage", { random })));
   }
 }
