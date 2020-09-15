@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 
 export default class PrefixCommand extends Command {
   public constructor() {
-    super("aliases-add", {
+    super("aliases-rest", {
       category: "flag",
     });
   }

@@ -10,11 +10,11 @@ export default Structures.extend(
       }
 
       public get databaseMembers() {
-        return (this.client as AkairoClient).database.guilds.get(this.id)?.members;
+        return (this.client as AkairoClient).database.guilds.get(this.id)?.members ?? [];
       }
 
       public get databaseAliases() {
-        return (this.client as AkairoClient).database.guilds.get(this.id)?.aliases;
+        return (this.client as AkairoClient).database.guilds.get(this.id)?.aliases ?? [];
       }
     }
 );
