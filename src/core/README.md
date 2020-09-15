@@ -1,0 +1,1 @@
+# Core Files that bot use it to contact with discordAPI
