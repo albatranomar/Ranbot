@@ -41,57 +41,6 @@ export class Database extends EventEmitter {
   public guilds = new Collection<string, defaultGuildsCollectionSchema>();
   public users = new Collection<string, defaultUsersCollectionSchema>();
 
-  public get userManagement() {
-    let {
-      createUser,
-      updateUser,
-      deleteUser
-    } = this;
-    return {
-      createUser,
-      updateUser,
-      deleteUser
-    }
-  }
-  public get guildManagement() {
-    let {
-      createGuild,
-      updateGuild,
-      deleteGuild
-    } = this;
-    return {
-      createGuild,
-      updateGuild,
-      deleteGuild
-    }
-  }
-  public get guildMemberManagement() {
-    let {
-      createGuildMember,
-      updateGuildMember,
-      deleteGuildMember
-    } = this;
-    return {
-      createGuildMember,
-      updateGuildMember,
-      deleteGuildMember
-    }
-  }
-  public get guildAliasesManagement() {
-    let {
-      createGuildAlias,
-      deleteGuildAlias,
-      deleteAllCommandAliases,
-      deleteAllGuildAliases
-    } = this;
-    return {
-      createGuildAlias,
-      deleteGuildAlias,
-      deleteAllCommandAliases,
-      deleteAllGuildAliases
-    }
-  }
-
   public async init(): Promise<void> {
     this.emit("initialized");
     for (const guild of await prisma.guild.findMany()) {
@@ -109,7 +58,7 @@ export class Database extends EventEmitter {
     await this.init();
   }
 
-  private async createUser(user: string | User) {
+  public async createUser(user: string | User) {
     let userID = Database.userIDResolver(user);
     if (this.users.has(userID)) {
       return this.users.get(userID);
@@ -133,7 +82,7 @@ export class Database extends EventEmitter {
       return this.users.get(userID);
     }
   }
-  private async updateUser(user: string | User, key: string, value: any) {
+  public async updateUser(user: string | User, key: string, value: any) {
     let userID = Database.userIDResolver(user);
     if (this.users.has(userID)) {
       this.users.get(userID)[key] = value;
@@ -150,7 +99,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async deleteUser(user: string | User) {
+  public async deleteUser(user: string | User) {
     let userID = Database.userIDResolver(user);
     if (this.users.has(userID)) {
       this.users.delete(userID);
@@ -164,7 +113,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async createGuild(guild: string | Guild) {
+  public async createGuild(guild: string | Guild) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       return this.guilds.get(guildID);
@@ -183,7 +132,7 @@ export class Database extends EventEmitter {
       return this.guilds.get(guildID);
     }
   }
-  private async updateGuild(guild: string | Guild, key: string, value: any, isItAnArray: boolean = false) {
+  public async updateGuild(guild: string | Guild, key: string, value: any, isItAnArray: boolean = false) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       this.guilds.get(guildID)[key] = value;
@@ -205,7 +154,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async deleteGuild(guild: string | Guild) {
+  public async deleteGuild(guild: string | Guild) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       this.guilds.delete(guildID);
@@ -219,7 +168,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async createGuildMember(guild: string | Guild, user: string | User) {
+  public async createGuildMember(guild: string | Guild, user: string | User) {
     let userID = Database.userIDResolver(user),
       guildID = Database.guildIDResolver(guild);
     if (this.guilds.find(g => g.id == guildID && g.members.find(m => m.userID == userID) as unknown as boolean)) {
@@ -244,7 +193,7 @@ export class Database extends EventEmitter {
       return this.guilds.get(guildID);
     }
   }
-  private async updateGuildMember(guild: string | Guild, user: string | User, key: string, value: any) {
+  public async updateGuildMember(guild: string | Guild, user: string | User, key: string, value: any) {
     let userID = Database.userIDResolver(user),
       guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID) && this.guilds.get(guildID).members.find(m => m.userID == userID)) {
@@ -263,7 +212,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async deleteGuildMember(guild: string | Guild, user: string | User) {
+  public async deleteGuildMember(guild: string | Guild, user: string | User) {
     let userID = Database.userIDResolver(user),
       guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID) && this.guilds.get(guildID).members.find(m => m.userID == userID)) {
@@ -280,7 +229,7 @@ export class Database extends EventEmitter {
     }
   }
 
-  private async createGuildAlias(guild: string | Guild, commandID: string, alias: string) {
+  public async createGuildAlias(guild: string | Guild, commandID: string, alias: string) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       let currentCommandAliases = this.guilds.get(guildID).aliases.find(a => a.commandID == commandID);
@@ -323,7 +272,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async deleteGuildAlias(guild: string | Guild, commandID: string, alias: string) {
+  public async deleteGuildAlias(guild: string | Guild, commandID: string, alias: string) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       let currentCommandAliases = this.guilds.get(guildID).aliases.find(a => a.commandID == commandID);
@@ -353,7 +302,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async deleteAllCommandAliases(guild: string | Guild, commandID: string) {
+  public async deleteAllCommandAliases(guild: string | Guild, commandID: string) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       let currentCommandAliases = this.guilds.get(guildID).aliases.find(a => a.commandID == commandID);
@@ -374,7 +323,7 @@ export class Database extends EventEmitter {
       return false;
     }
   }
-  private async deleteAllGuildAliases(guild: string | Guild) {
+  public async deleteAllGuildAliases(guild: string | Guild) {
     let guildID = Database.guildIDResolver(guild);
     if (this.guilds.has(guildID)) {
       this.guilds.get(guildID).aliases = [];
